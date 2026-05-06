@@ -2,10 +2,14 @@
 The amount of bad luck from breaking a mirror.
 
 ## Warning: Nightly
-This project uses nightly features that may never see the light of stable.
-Each nightly feature must be enable using a crate feature.
+This project uses nightly features that may never see the light of stable.\
+Each nightly feature must be enabled using a crate feature.
 
 ## Features
+
+## Credits
+This idea has been discussed and collaborated on by many people in the Bevy discord server.\
+Pizza made his own repository which explores the same features in different ways. <https://github.com/PizzaLvr49/variadic-testing>
 
 ## License
 
