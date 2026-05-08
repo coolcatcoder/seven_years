@@ -10,13 +10,16 @@
     feature(maybe_uninit_array_assume_init)
 )]
 #![allow(incomplete_features)]
+#![deny(missing_docs)]
 
 #[cfg(feature = "generic_const_arguments")]
 #[cfg(feature = "type_info")]
 #[cfg(feature = "ptr_metadata")]
 #[cfg(feature = "maybe_uninit_array_assume_init")]
+/// Reflection of a type's fields as `dyn Trait`s.
 pub mod fields;
 #[cfg(test)]
 mod tests;
 
+#[allow(dead_code)]
 struct Assert<const CONDITION: bool>;

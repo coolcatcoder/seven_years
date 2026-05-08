@@ -90,7 +90,9 @@ const fn fields<T>() -> Option<&'static [Field]> {
     }
 }
 
+/// Types which have fields.
 pub trait Fields {
+    /// The quantity of fields the type has.
     type const LENGTH: usize;
 }
 impl<T> Fields for T
@@ -100,6 +102,7 @@ where
     type const LENGTH: usize = const { fields::<T>().unwrap().len() };
 }
 
+/// Types in which all fields implement a specified trait.
 pub trait AllFieldsImplement<Trait: ?Sized + 'static>: Fields {}
 impl<T: Fields, Trait: ?Sized + 'static> AllFieldsImplement<Trait> for T where
     Assert<{ <T as complex_expressions::AllFieldsImplement<Trait>>::OUTPUT }>:
@@ -107,15 +110,17 @@ impl<T: Fields, Trait: ?Sized + 'static> AllFieldsImplement<Trait> for T where
 {
 }
 
-pub trait IterateFields: Fields {
-    fn for_each_field<Trait: Pointee<Metadata = DynMetadata<Trait>> + ?Sized + 'static>(
+/// Allows accessing a type's fields as an array.
+pub trait FieldsToArray: Fields {
+    /// Presents a type's fields as an array of the specified `dyn Trait`.
+    fn fields_to_array_ref<Trait: Pointee<Metadata = DynMetadata<Trait>> + ?Sized + 'static>(
         &self,
     ) -> [&Trait; Self::LENGTH]
     where
         Self: AllFieldsImplement<Trait>;
 }
-impl<T: Fields> IterateFields for T {
-    fn for_each_field<Trait: Pointee<Metadata = DynMetadata<Trait>> + ?Sized + 'static>(
+impl<T: Fields> FieldsToArray for T {
+    fn fields_to_array_ref<Trait: Pointee<Metadata = DynMetadata<Trait>> + ?Sized + 'static>(
         &self,
     ) -> [&Trait; Self::LENGTH]
     where
