@@ -9,7 +9,6 @@
     feature = "maybe_uninit_array_assume_init",
     feature(maybe_uninit_array_assume_init)
 )]
-#![cfg_attr(test, feature(macro_attr))]
 #![allow(incomplete_features)]
 
 #[cfg(feature = "generic_const_arguments")]

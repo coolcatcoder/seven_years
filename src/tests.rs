@@ -3,21 +3,19 @@ extern crate std;
 use core::fmt::Write;
 
 macro_rules! test_with_features {
-    attr($($features:literal),*) ($visibility:vis mod $module:ident {$($body:tt)*}) => {
+    ($visibility:vis mod $module:ident = $($features:literal),*) => {
         $(
             #[cfg(feature = $features)]
         )*
-        $visibility mod $module {$($body)*}
+        #[cfg(test)]
+        $visibility mod $module;
 
         #[test]
         fn $module() {
             run_with_features(
                 &std::format!("{}::main", stringify!($module)),
                 [
-                    "generic_const_arguments",
-                    "type_info",
-                    "ptr_metadata",
-                    "maybe_uninit_array_assume_init",
+                    $($features),*
                 ],
             );
         }
@@ -34,38 +32,18 @@ fn run_with_features<const LENGTH: usize>(module: &str, features: [&str; LENGTH]
         .output()
         .expect("The command will work.");
 
+    let stdout = str::from_utf8(&output.stdout).expect("Valid utf8.");
     let stderr = str::from_utf8(&output.stderr).expect("Valid utf8.");
-    //panic!("START START START\n{stderr}\nEND END END");
+
     assert!(
-        !(stderr.contains("error: test failed") || stderr.contains("error: could not compile"))
+        !(stdout.contains("test result: FAILED") || stderr.contains("error: could not compile")),
+        "START STDOUT START\n{stdout}\nEND END END\nSTART STDERR START\n{stderr}\nEND END END"
     );
 }
 
-#[test_with_features(
+test_with_features!(mod fields =
     "generic_const_arguments",
     "type_info",
     "ptr_metadata",
     "maybe_uninit_array_assume_init"
-)]
-mod fields {
-    use crate::fields::{AllFieldsImplement, IterateFields};
-    use core::fmt::{Debug, Display};
-
-    const fn tester<T: AllFieldsImplement<Trait>, Trait: 'static + ?Sized>() {}
-
-    #[test]
-    pub fn main() {
-        tester::<(), dyn Send>();
-        tester::<(i32, i32, [i32; 5]), dyn Sync>();
-        // Does not compile.
-        // tester::<(*const i32, f32), dyn Sync>();
-
-        for _debug in 0.5_f64.for_each_field::<dyn Debug>() {
-            //println!("{debug:?}");
-        }
-
-        for _display in (0_i32, 1.0_f32, "Two.").for_each_field::<dyn Display>() {
-            //println!("{display}");
-        }
-    }
-}
+);
