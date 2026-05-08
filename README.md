@@ -1,11 +1,16 @@
-## Seven Years
-The amount of bad luck from breaking a mirror.
+# Seven Years
+The amount of bad luck from breaking a mirror.\
+This crate is a reflection library.
 
 ## Warning: Nightly
 This project uses nightly features that may never see the light of stable.\
 Each nightly feature must be enabled using a crate feature.
 
 ## Features
+`generic_const_arguments`\
+`type_info`\
+`ptr_metadata`\
+`maybe_uninit_array_assume_init`
 
 ## Credits
 This idea has been discussed and collaborated on by many people in the Bevy discord server.\
