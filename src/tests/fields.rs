@@ -2,6 +2,18 @@ use super::std;
 use crate::fields::{AllFieldsImplement, FieldsToArray};
 use core::fmt::{Debug, Display};
 
+#[allow(dead_code)]
+trait Has {
+    fn do_something(&self);
+}
+impl<T: AllFieldsImplement<dyn Has>> Has for T {
+    fn do_something(&self) {
+        for has in self.fields_to_array_ref::<dyn Has>() {
+            has.do_something();
+        }
+    }
+}
+
 const fn tester<T: AllFieldsImplement<Trait>, Trait: 'static + ?Sized>() {}
 
 #[test]
