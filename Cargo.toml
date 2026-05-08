@@ -4,4 +4,10 @@ version = "0.1.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 
+[features]
+generic_const_arguments = []
+type_info = []
+ptr_metadata = []
+maybe_uninit_array_assume_init = []
+
 [dependencies]
